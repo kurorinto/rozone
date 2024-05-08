@@ -26,7 +26,7 @@ const RozoneLayer = () => {
         onChange={setCurrentRuleIndex}
         onAdd={(value) => {
           setRules((prev) => [
-            ...(prev || []),
+            ...prev,
             { label: value, value: { mode: "1", decs: "" } }
           ])
           setCurrentRuleIndex(rules.length)
@@ -43,7 +43,7 @@ const RozoneLayer = () => {
         data={rules[currentRuleIndex]}
         onEdit={(rule) => {
           setRules((prev) => {
-            const newRules = [...(prev || [])]
+            const newRules = [...prev]
             newRules[currentRuleIndex] = rule
             return newRules
           })
