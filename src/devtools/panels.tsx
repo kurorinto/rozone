@@ -7,7 +7,7 @@ import Sider, { type SiderRef } from "./components/Sider"
 
 export interface Rule {
   label: string
-  value: string
+  value: { mode: "1" | "2"; decs: string }
 }
 
 const RozoneLayer = () => {
@@ -36,7 +36,10 @@ const RozoneLayer = () => {
         data={rules}
         onChange={setCurrentRuleIndex}
         onAdd={(value) => {
-          setRules((prev) => [...(prev || []), { label: value, value: "" }])
+          setRules((prev) => [
+            ...(prev || []),
+            { label: value, value: { mode: "1", decs: "" } }
+          ])
           setCurrentRuleIndex(rules?.length || 0)
         }}
         onDelete={(index) => {
@@ -49,13 +52,10 @@ const RozoneLayer = () => {
       <Split type="vertical" />
       <Content
         data={rules?.[currentRuleIndex]}
-        onEdit={(value) => {
+        onEdit={(rule) => {
           setRules((prev) => {
             const newRules = [...(prev || [])]
-            newRules[currentRuleIndex] = {
-              ...newRules[currentRuleIndex],
-              label: value
-            }
+            newRules[currentRuleIndex] = rule
             return newRules
           })
         }}

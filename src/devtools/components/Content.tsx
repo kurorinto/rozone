@@ -1,26 +1,55 @@
-import { Fragment, useEffect, useState, type FC } from "react"
+import debounce from "lodash/debounce"
+import { Fragment, useEffect, useState, type ChangeEvent, type FC } from "react"
 
 import type { Rule } from "~devtools/panels"
 
 import Split from "./common/Split"
 import { Input } from "./ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "./ui/select"
 
 interface ContentProps {
   data?: Rule
-  onEdit?: (value: string) => void
+  onEdit?: (rule: Rule) => void
 }
+
+const selectItems = [
+  {
+    label: "包含",
+    value: "1"
+  },
+  {
+    label: "正则",
+    value: "2"
+  }
+]
 
 const Content: FC<ContentProps> = ({ data, onEdit }) => {
   const [editing, setEditing] = useState(false)
-  const [value, setValue] = useState(data?.label)
+  const [ruleLabel, setRuleLabel] = useState(data?.label)
+  const [ruleDesc, setRuleDesc] = useState(data?.value.decs || "")
 
   const escapeEdit = () => {
     setEditing(false)
   }
 
+  const descChangeHandler = debounce((e: ChangeEvent<HTMLInputElement>) => {
+    onEdit?.({ ...data, value: { ...data?.value, decs: e.target.value } })
+  }, 500)
+
   useEffect(() => {
-    setValue(data?.label)
+    setRuleLabel(data?.label)
   }, [data?.label])
+
+  useEffect(() => {
+    setRuleDesc(data?.value.decs)
+  }, [data?.value.decs])
 
   return (
     <div className="flex-1 flex flex-col">
@@ -29,20 +58,20 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
         onDoubleClick={() => data?.label && setEditing(true)}>
         {editing ? (
           <Input
-            value={value}
+            value={ruleLabel}
             className="w-full h-full rounded-none border-none px-0 !ring-transparent"
             placeholder="esc to exit or enter to ok"
             autoFocus
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => setRuleLabel(e.target.value)}
             onBlur={escapeEdit}
-            onKeyUp={({ key, currentTarget }) => {
+            onKeyUp={({ key }) => {
               switch (key) {
                 case "Escape":
                   escapeEdit()
                   break
                 case "Enter":
-                  if (value) {
-                    onEdit?.(value)
+                  if (ruleLabel) {
+                    onEdit?.({ ...data, label: ruleLabel })
                   }
                   escapeEdit()
                   break
@@ -63,7 +92,39 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
         )}
       </div>
       <Split />
-      <div className="flex-1 p-2"></div>
+      <div className="flex-1 p-2">
+        <div className="flex items-center gap-x-2">
+          {data ? (
+            <Fragment>
+              <Select
+                value={data?.value.mode}
+                onValueChange={(value: "1" | "2") => {
+                  onEdit?.({ ...data, value: { ...data.value, mode: value } })
+                }}>
+                <SelectTrigger className="flex-[80px] flex-shrink-0 flex-grow-0">
+                  <SelectValue placeholder="选择匹配方式" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {selectItems.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Input
+                value={ruleDesc}
+                onChange={(e) => {
+                  setRuleDesc(e.target.value)
+                  descChangeHandler(e)
+                }}
+              />
+            </Fragment>
+          ) : null}
+        </div>
+      </div>
     </div>
   )
 }
