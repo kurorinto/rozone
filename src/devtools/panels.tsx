@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 
 import Split from "./components/common/Split"
 import Content from "./components/Content"
-import Sider, { type SiderRef } from "./components/Sider"
+import Sider from "./components/Sider"
 
 export interface Rule {
   label: string
@@ -12,26 +12,15 @@ export interface Rule {
 
 const RozoneLayer = () => {
   const [currentRuleIndex, setCurrentRuleIndex] = useState(0)
-  const [rules, setRules] = useState<Rule[] | undefined>()
-  const siderRef = useRef<SiderRef>(null)
-
-  const documentKeydownHandler = useCallback((event: KeyboardEvent) => {
-    if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-      siderRef.current?.focus()
-    }
-  }, [])
+  const [rules, setRules] = useState<Rule[]>([])
 
   useEffect(() => {
-    document.addEventListener("keydown", documentKeydownHandler)
-    return () => {
-      document.removeEventListener("keydown", documentKeydownHandler)
-    }
-  }, [])
+    console.log(rules)
+  }, [rules])
 
   return (
     <div className="w-full h-full flex">
       <Sider
-        ref={siderRef}
         current={currentRuleIndex}
         data={rules}
         onChange={setCurrentRuleIndex}
@@ -40,7 +29,7 @@ const RozoneLayer = () => {
             ...(prev || []),
             { label: value, value: { mode: "1", decs: "" } }
           ])
-          setCurrentRuleIndex(rules?.length || 0)
+          setCurrentRuleIndex(rules.length)
         }}
         onDelete={(index) => {
           setRules((prev) => prev.filter((_, i) => i !== index))
@@ -51,7 +40,7 @@ const RozoneLayer = () => {
       />
       <Split type="vertical" />
       <Content
-        data={rules?.[currentRuleIndex]}
+        data={rules[currentRuleIndex]}
         onEdit={(rule) => {
           setRules((prev) => {
             const newRules = [...(prev || [])]

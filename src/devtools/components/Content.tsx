@@ -1,5 +1,12 @@
 import debounce from "lodash/debounce"
-import { Fragment, useEffect, useState, type ChangeEvent, type FC } from "react"
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type FC
+} from "react"
 
 import type { Rule } from "~devtools/panels"
 
@@ -39,9 +46,12 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
     setEditing(false)
   }
 
-  const descChangeHandler = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    onEdit?.({ ...data, value: { ...data?.value, decs: e.target.value } })
-  }, 500)
+  const descChangeHandler = useCallback(
+    debounce((e: ChangeEvent<HTMLInputElement>) => {
+      onEdit?.({ ...data, value: { ...data?.value, decs: e.target.value } })
+    }, 500),
+    [data]
+  )
 
   useEffect(() => {
     setRuleLabel(data?.label)
