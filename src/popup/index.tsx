@@ -1,10 +1,12 @@
 import { useState } from "react"
+import "./index.scss"
 
 function IndexPopup() {
   const [data, setData] = useState("")
 
   return (
     <div
+      className="bg-[pink]"
       style={{
         padding: 16
       }}>
