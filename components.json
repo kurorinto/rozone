@@ -11,7 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "src/popup/components",
-    "utils": "src/contents/utils"
+    "components": "src/devtools/components",
+    "utils": "src/devtools/utils"
   }
 }
