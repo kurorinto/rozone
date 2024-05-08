@@ -36,7 +36,7 @@ const RozoneLayer = () => {
         data={rules}
         onChange={setCurrentRuleIndex}
         onAdd={(value) => {
-          setRules((prev) => [...(prev || []), { label: value, value: '' }])
+          setRules((prev) => [...(prev || []), { label: value, value: "" }])
           setCurrentRuleIndex(rules?.length || 0)
         }}
         onDelete={(index) => {
@@ -47,7 +47,19 @@ const RozoneLayer = () => {
         }}
       />
       <Split type="vertical" />
-      <Content data={rules?.[currentRuleIndex]} />
+      <Content
+        data={rules?.[currentRuleIndex]}
+        onEdit={(value) => {
+          setRules((prev) => {
+            const newRules = [...(prev || [])]
+            newRules[currentRuleIndex] = {
+              ...newRules[currentRuleIndex],
+              label: value
+            }
+            return newRules
+          })
+        }}
+      />
     </div>
   )
 }
