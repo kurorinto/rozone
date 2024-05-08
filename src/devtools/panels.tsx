@@ -36,8 +36,8 @@ const RozoneLayer = () => {
         data={rules}
         onChange={setCurrentRuleIndex}
         onAdd={(value) => {
-          setRules((prev) => [...(prev || []), { label: value, value }])
-          setCurrentRuleIndex(rules.length)
+          setRules((prev) => [...(prev || []), { label: value, value: '' }])
+          setCurrentRuleIndex(rules?.length || 0)
         }}
         onDelete={(index) => {
           setRules((prev) => prev.filter((_, i) => i !== index))

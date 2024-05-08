@@ -24,6 +24,7 @@ const Sider = forwardRef<SiderRef, SiderProps>(
     const [adding, setAdding] = useState(false)
     const [addValue, setAddValue] = useState("")
     const inputRef = useRef<HTMLInputElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
 
     const escapeAdd = () => {
       setAdding(false)
@@ -78,7 +79,9 @@ const Sider = forwardRef<SiderRef, SiderProps>(
           )}
         </div>
         <Split />
-        <div className="flex-1 p-2 flex flex-col gap-y-2 overflow-y-auto">
+        <div
+          ref={containerRef}
+          className="flex-1 p-2 flex flex-col gap-y-2 overflow-y-auto">
           {data?.map((rule, index) => (
             <div
               key={index}
@@ -90,6 +93,9 @@ const Sider = forwardRef<SiderRef, SiderProps>(
                 className="group-hover:visible invisible cursor-pointer"
                 onClick={(e) => {
                   onDelete?.(index)
+                  if (index === current && containerRef.current) {
+                    containerRef.current.scrollTop = 0
+                  }
                   e.stopPropagation()
                 }}
               />
