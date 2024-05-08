@@ -1,4 +1,5 @@
-import fontPickerHTML from "src/panels/font-picker/index.html"
+// @ts-ignore
+import fontPickerHTML from "./panels.html"
 
 chrome.devtools.panels.create(
   "Rozone layer",
@@ -8,11 +9,7 @@ chrome.devtools.panels.create(
 )
 
 function IndexDevtools() {
-  return (
-    <h2>
-      Welcome to your <a href="https://www.plasmo.com">Plasmo</a> Extension!
-    </h2>
-  )
+  return null
 }
 
 export default IndexDevtools
