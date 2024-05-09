@@ -47,39 +47,42 @@ const Sider: FC<SiderProps> = ({
   return (
     <div className="flex-[200px] flex-shrink-0 flex-grow-0 flex flex-col">
       <div className="h-10">
-        <Input
-          value={addValue}
-          className={`w-full h-10 rounded-none border-none ${adding ? "" : "hidden"}`}
-          autoFocus
-          placeholder="esc to exit or enter to ok"
-          onBlur={escapeAdd}
-          onKeyUp={({ key }) => {
-            switch (key) {
-              case "Escape":
-                escapeAdd()
-                break
-              case "Enter":
-                if (addValue) {
-                  onAdd?.(addValue)
-                }
-                escapeAdd()
-                break
-              default:
-                break
-            }
-          }}
-          onChange={(e) => setAddValue(e.target.value)}
-        />
-        <Button
-          variant="ghost"
-          className={`w-full h-10 rounded-none relative ${adding ? "hidden" : ""}`}
-          onClick={() => setAdding(true)}>
-          <Plus size={14} className="mr-[4px]" />
-          <span>添加规则</span>
-          <span className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-muted pointer-events-none rounded-sm border border-solid border-border px-1 inline-flex items-center gap-x-0.5 text-[12px]">
-            <Command size={12} />K
-          </span>
-        </Button>
+        {adding ? (
+          <Input
+            value={addValue}
+            className="w-full h-10 rounded-none border-none"
+            autoFocus
+            placeholder="esc to exit or enter to ok"
+            onBlur={escapeAdd}
+            onKeyUp={({ key }) => {
+              switch (key) {
+                case "Escape":
+                  escapeAdd()
+                  break
+                case "Enter":
+                  if (addValue) {
+                    onAdd?.(addValue)
+                  }
+                  escapeAdd()
+                  break
+                default:
+                  break
+              }
+            }}
+            onChange={(e) => setAddValue(e.target.value)}
+          />
+        ) : (
+          <Button
+            variant="ghost"
+            className="w-full h-10 rounded-none relative"
+            onClick={() => setAdding(true)}>
+            <Plus size={14} className="mr-[4px]" />
+            <span>添加规则</span>
+            <span className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-muted pointer-events-none rounded-sm border border-solid border-border px-1 inline-flex items-center gap-x-0.5 text-[12px]">
+              <Command size={12} />K
+            </span>
+          </Button>
+        )}
       </div>
       <Split />
       <div
