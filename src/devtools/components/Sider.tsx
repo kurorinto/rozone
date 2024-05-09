@@ -3,9 +3,9 @@ import { useCallback, useEffect, useRef, useState, type FC } from "react"
 
 import type { Rule } from "~devtools/panels"
 
-import Split from "./common/Split"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
+import Split from "./Split"
+import { Button } from "../../components/ui/button"
+import { Input } from "../../components/ui/input"
 
 interface SiderProps {
   current: number

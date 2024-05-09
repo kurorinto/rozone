@@ -10,8 +10,8 @@ import {
 
 import type { Rule } from "~devtools/panels"
 
-import Split from "./common/Split"
-import { Input } from "./ui/input"
+import Split from "./Split"
+import { Input } from "../../components/ui/input"
 import {
   Select,
   SelectContent,
@@ -19,7 +19,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "./ui/select"
+} from "../../components/ui/select"
 
 interface ContentProps {
   data?: Rule
