@@ -52,7 +52,13 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
         if (responseData.hasOwnProperty("success")) {
           if (!responseData["success" as keyof typeof responseData]) {
             toast.error(messageData.url, {
-              description: messageData.response
+              description: `
+                <div class="font-medium">XRequestID</div>
+                <div>${messageData.xRequestId}</div>
+                <div class="font-medium">RequestBody</div>
+                <div>${messageData.requestBody}</div>
+                <div class="font-medium">ResponseBody</div>
+                <div>${messageData.response}</div>`
             })
           }
         }
@@ -98,11 +104,12 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
         closeButton
         richColors
         toastOptions={{
-          className: "items-start leading-[20px]",
           classNames: {
-            icon: 'mt-[3px]',
-            title: 'leading-[22px] text-[16px]',
-            description: 'leading-[20px] max-h-[150px] overflow-y-auto'
+            toast: "items-start leading-[20px]",
+            icon: "mt-[3px]",
+            title: "leading-[22px] text-[16px] break-all",
+            description:
+              "leading-[20px] max-h-[150px] overflow-y-auto break-all"
           }
         }}
         visibleToasts={Infinity}
