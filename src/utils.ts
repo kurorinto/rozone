@@ -4,6 +4,7 @@ import type { Rule } from "~devtools/panels";
 
 export interface RozoneStorage {
   rules: Rule[]
+  currentId?: number
 }
 
 const storage = new Storage()

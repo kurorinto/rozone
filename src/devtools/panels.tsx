@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createRoot } from "react-dom/client"
 
 import type { XHRMessageData } from "~contents/xhr"
@@ -14,6 +14,7 @@ import Sider from "./components/Sider"
 import Split from "./components/Split"
 
 export interface Rule {
+  id: number
   label: string
   value: { mode: "1" | "2"; decs: string }
   records?: XHRMessageData[]
@@ -23,11 +24,13 @@ type MessageHandler = Parameters<typeof chrome.runtime.onMessage.addListener>[0]
 
 const RozoneLayer = () => {
   const [currentRuleIndex, setCurrentRuleIndex] = useState(0)
+  const currentId = useRef(0)
   const [rules, setRules] = useState<Rule[]>([])
 
   const init = async () => {
     const cacheData = await getCache()
     setRules(cacheData.rules || [])
+    currentId.current = cacheData.currentId || 0
   }
 
   const runtimeMessageHandler: MessageHandler = (messageJSON, sender) => {
@@ -40,10 +43,8 @@ const RozoneLayer = () => {
 
   useEffect(() => {
     sendMessageToContent({ rules })
-  }, [rules])
-
-  useEffect(() => {
-    setCache({ rules })
+    setCache({ rules, currentId: currentId.current })
+    console.log(rules, currentId.current)
   }, [rules])
 
   useEffect(() => {
@@ -64,7 +65,11 @@ const RozoneLayer = () => {
         onAdd={(value) => {
           setRules((prev) => [
             ...prev,
-            { label: value, value: { mode: "1", decs: "" } }
+            {
+              id: ++currentId.current,
+              label: value,
+              value: { mode: "1", decs: "" }
+            }
           ])
           setCurrentRuleIndex(rules.length)
         }}
