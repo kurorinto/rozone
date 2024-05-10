@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./index.scss"
+import { sendMessageToContent } from "~utils"
 
 function IndexPopup() {
   const [data, setData] = useState("")
