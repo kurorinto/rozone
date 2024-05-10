@@ -16,6 +16,18 @@ function isAbsoluteUrl(url) {
   return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//");
 }
 
+function convertHeadersToObject(headersString) {
+  let headersArray = headersString.trim().split('\n');
+  let headersObject = {};
+
+  headersArray.forEach(header => {
+    let [key, value] = header.split(': ');
+    headersObject[key] = value;
+  });
+
+  return headersObject;
+}
+
 window.addEventListener("load", () => {
   // 重写ajax方法，以便在请求结束后通知content_script
   // inject_script无法直接与background通信，所以先传到content_script，再通过他传到background
@@ -33,14 +45,14 @@ window.addEventListener("load", () => {
     // 同send进行patch 获取responseData.
     XHR.send = function (postData) {
       this.addEventListener('load', async function () {
-        var myUrl = this._url ? this._url.toLowerCase() : this._url;
-        if (myUrl) {
+        if (this._url) {
           if (this.responseType != 'blob' && this.responseText) {
             // responseText is string or null
             try {
               const arr = this.responseText;
+              const headers = convertHeadersToObject(this.getAllResponseHeaders());
               // 发送给content-ui
-              window.postMessage({ url: this._url, requestBody: postData, xRequestId: this.getResponseHeader('X-Request-Id'), response: arr }, '*');
+              window.postMessage({ url: this._url, requestBody: postData, xRequestId: headers['x-request-id'], response: arr }, '*');
             } catch (err) {
               console.log(err);
               console.log("Error in responseType try catch");
