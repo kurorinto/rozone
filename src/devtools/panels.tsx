@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 
-import { getCache, sendMessageToContent, setCache } from "~utils"
+import type { XHRMessageData } from "~contents/xhr"
+import {
+  getCache,
+  isSelfExtension,
+  sendMessageToContent,
+  setCache
+} from "~utils"
 
 import Content from "./components/Content"
 import Sider from "./components/Sider"
 import Split from "./components/Split"
-import type { XHRMessageData } from "~contents/xhr"
 
 export interface Rule {
   label: string
   value: { mode: "1" | "2"; decs: string }
   records?: XHRMessageData[]
 }
+
+type MessageHandler = Parameters<typeof chrome.runtime.onMessage.addListener>[0]
 
 const RozoneLayer = () => {
   const [currentRuleIndex, setCurrentRuleIndex] = useState(0)
@@ -21,6 +28,14 @@ const RozoneLayer = () => {
   const init = async () => {
     const cacheData = await getCache()
     setRules(cacheData.rules || [])
+  }
+
+  const runtimeMessageHandler: MessageHandler = (messageJSON, sender) => {
+    if (isSelfExtension(sender)) {
+      // todo
+      const data = JSON.parse(messageJSON)
+      setRules(data.rules)
+    }
   }
 
   useEffect(() => {
@@ -33,6 +48,11 @@ const RozoneLayer = () => {
 
   useEffect(() => {
     init()
+
+    chrome.runtime.onMessage.addListener(runtimeMessageHandler)
+    return () => {
+      chrome.runtime.onMessage.removeListener(runtimeMessageHandler)
+    }
   }, [])
 
   return (

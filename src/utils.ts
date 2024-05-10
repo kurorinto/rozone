@@ -1,4 +1,5 @@
 import { Storage } from "@plasmohq/storage";
+import { DEV_EXTENSION_ID, EXTENSION_ID } from "~constants";
 import type { Rule } from "~devtools/panels";
 
 export interface RozoneStorage {
@@ -46,3 +47,5 @@ export const sendMessageToContent = async (data: RozoneStorage) => {
 }
 
 export const isEmpty = (obj: Object) => !Object.keys(obj).length
+
+export const isSelfExtension = (sender: chrome.runtime.MessageSender) => sender.id === (process.env.NODE_ENV === "development" ? DEV_EXTENSION_ID : EXTENSION_ID)

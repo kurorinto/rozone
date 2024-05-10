@@ -4,9 +4,8 @@ import type { PlasmoCSConfig, PlasmoCSUIProps } from "plasmo"
 import { Fragment, useCallback, useEffect, useState, type FC } from "react"
 import { toast, Toaster } from "sonner"
 
-import { DEV_EXTENSION_ID, EXTENSION_ID } from "~constants"
 import type { Rule } from "~devtools/panels"
-import { getCache, type RozoneStorage } from "~utils"
+import { getCache, isSelfExtension, type RozoneStorage } from "~utils"
 
 import type { XHRMessageData } from "./xhr"
 
@@ -25,7 +24,7 @@ export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"]
 }
 
-const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
+const Contents: FC<PlasmoCSUIProps> = () => {
   const [rules, setRules] = useState<Rule[]>([])
 
   const init = async () => {
@@ -64,6 +63,7 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
             // 发消息给 devtools 页面
             console.log(chrome.runtime)
             console.log(chrome.tabs)
+            chrome.runtime.sendMessage("bingo!")
           }
         }
       }
@@ -73,12 +73,7 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
   const chromeMessageHandler = useCallback<MessageHandler>(
     (messageJSON, sender) => {
-      if (
-        sender.id ===
-        (process.env.NODE_ENV === "development"
-          ? DEV_EXTENSION_ID
-          : EXTENSION_ID)
-      ) {
+      if (isSelfExtension(sender)) {
         const data = JSON.parse(messageJSON) as RozoneStorage
         setRules(data.rules)
       }
