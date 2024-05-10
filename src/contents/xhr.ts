@@ -39,15 +39,8 @@ window.addEventListener("load", () => {
             // responseText is string or null
             try {
               const arr = this.responseText;
-
-              // 发送给background
-              // // chrome.extension.
-              // // const res = await sendToBackground<MessageResponseRequestBody, MessageResponseResponseBody>({
-              // //   name: "response",
-              // //   body: { url: this._url, response: arr },
-              // //   extensionId: process.env.NODE_ENV === 'development' ? DEV_EXTENSION_ID : EXTENSION_ID // find this in chrome's extension manager
-              // // })
-              window.postMessage({ url: this._url, requestBody: postData, requestId: this.getResponseHeader('X-Request-Id'), response: arr }, '*');
+              // 发送给content-ui
+              window.postMessage({ url: this._url, requestBody: postData, xRequestId: this.getResponseHeader('X-Request-Id'), response: arr }, '*');
             } catch (err) {
               console.log(err);
               console.log("Error in responseType try catch");

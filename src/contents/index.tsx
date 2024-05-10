@@ -53,12 +53,12 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
           if (!responseData["success" as keyof typeof responseData]) {
             toast.error(messageData.url, {
               description: `
-                <div class="font-medium">XRequestID</div>
-                <div>${messageData.xRequestId}</div>
-                <div class="font-medium">RequestBody</div>
-                <div>${messageData.requestBody}</div>
-                <div class="font-medium">ResponseBody</div>
-                <div>${messageData.response}</div>`
+                <span class="font-medium">XRequestID:</span>
+                <span>${messageData.xRequestId}</span><br />
+                <span class="font-medium">RequestBody:</span>
+                <span>${messageData.requestBody}</span><br />
+                <span class="font-medium">ResponseBody:</span>
+                <span>${messageData.response}</span>`
             })
           }
         }
