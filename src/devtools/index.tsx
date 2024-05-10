@@ -1,11 +1,11 @@
 // @ts-ignore
-import fontPickerHTML from "./panels.html"
+import rozoneHTML from "./panels.html"
 
 chrome.devtools.panels.create(
-  "Rozone layer",
+  "Rozone",
   null,
   // See: https://github.com/PlasmoHQ/plasmo/issues/106#issuecomment-1188539625
-  fontPickerHTML.split("/").pop()
+  rozoneHTML.split("/").pop()
 )
 
 function IndexDevtools() {

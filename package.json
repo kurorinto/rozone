@@ -1,6 +1,6 @@
 {
-  "name": "rozone-layer",
-  "displayName": "Rozone layer",
+  "name": "rozone",
+  "displayName": "Rozone",
   "version": "0.0.1",
   "description": "Intercepting requests and marking them.",
   "author": "kurorinto(394460456@qq.com)",
