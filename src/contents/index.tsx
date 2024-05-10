@@ -51,6 +51,7 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
         // 先写死我们自己的接口
         if (responseData.hasOwnProperty("success")) {
           if (!responseData["success" as keyof typeof responseData]) {
+            // 拦截 失败的请求 toast提示
             toast.error(messageData.url, {
               description: `
                 <span class="font-medium">XRequestID:</span>
@@ -60,6 +61,9 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
                 <span class="font-medium">ResponseBody:</span>
                 <span>${messageData.response}</span>`
             })
+            // 发消息给 devtools 页面
+            console.log(chrome.runtime)
+            console.log(chrome.tabs)
           }
         }
       }

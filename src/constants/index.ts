@@ -1,3 +1,3 @@
-export const DEV_EXTENSION_ID = 'pgeecmighkebpbckkfnjobkcpfebimng'
+export const DEV_EXTENSION_ID = 'noogdgfpbjlokadlhmdnblbbimcnhpdf'
 
-export const EXTENSION_ID = 'cddfjhmgagmoaffkfmechlhbmmdebfkm'
+export const EXTENSION_ID = 'cmedkkaicobcofagpjlmhkmlomblmcda'
