@@ -3,20 +3,20 @@ import { useCallback, useEffect, useRef, useState, type FC } from "react"
 
 import type { Rule } from "~devtools/panels"
 
-import Split from "./Split"
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
+import Split from "./Split"
 
 interface SiderProps {
-  current: number
+  currentId: number
   data?: Rule[]
-  onChange?: (index: number) => void
-  onDelete?: (index: number) => void
+  onChange?: (id: number) => void
+  onDelete?: (id: number) => void
   onAdd?: (value: string) => void
 }
 
 const Sider: FC<SiderProps> = ({
-  current,
+  currentId,
   data,
   onChange,
   onDelete,
@@ -88,18 +88,18 @@ const Sider: FC<SiderProps> = ({
       <div
         ref={containerRef}
         className="flex-1 p-2 flex flex-col gap-y-2 overflow-y-auto">
-        {data?.map((rule, index) => (
+        {data?.map((rule) => (
           <div
-            key={index}
-            className={`h-8 flex-shrink-0 flex-grow-0 rounded-sm px-3 flex items-center justify-between gap-x-2 line-clamp-1 hover:bg-accent group ${current === index ? "bg-primary text-white hover:bg-primary/90" : ""}`}
-            onClick={() => index !== current && onChange?.(index)}>
+            key={rule.id}
+            className={`h-8 flex-shrink-0 flex-grow-0 rounded-sm px-3 flex items-center justify-between gap-x-2 line-clamp-1 hover:bg-accent group ${currentId === rule.id ? "bg-primary text-white hover:bg-primary/90" : ""}`}
+            onClick={() => rule.id !== currentId && onChange?.(rule.id)}>
             {rule.label}
             <Trash2
               size={14}
               className="group-hover:visible invisible cursor-pointer"
               onClick={(e) => {
-                onDelete?.(index)
-                if (index === current && containerRef.current) {
+                onDelete?.(rule.id)
+                if (rule.id === currentId && containerRef.current) {
                   containerRef.current.scrollTop = 0
                 }
                 e.stopPropagation()

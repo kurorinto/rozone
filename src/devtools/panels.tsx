@@ -23,7 +23,7 @@ export interface Rule {
 type MessageHandler = Parameters<typeof chrome.runtime.onMessage.addListener>[0]
 
 const RozoneLayer = () => {
-  const [currentRuleIndex, setCurrentRuleIndex] = useState(0)
+  const [currentRuleId, setCurrentRuleId] = useState(0)
   const currentId = useRef(0)
   const [rules, setRules] = useState<Rule[]>([])
 
@@ -31,6 +31,7 @@ const RozoneLayer = () => {
     const cacheData = await getCache()
     setRules(cacheData.rules || [])
     currentId.current = cacheData.currentId || 0
+    setCurrentRuleId(cacheData.rules ? cacheData.rules[0]?.id : 0)
   }
 
   const runtimeMessageHandler: MessageHandler = (messageJSON, sender) => {
@@ -59,9 +60,9 @@ const RozoneLayer = () => {
   return (
     <div className="w-full h-full flex">
       <Sider
-        current={currentRuleIndex}
+        currentId={currentRuleId}
         data={rules}
-        onChange={setCurrentRuleIndex}
+        onChange={setCurrentRuleId}
         onAdd={(value) => {
           setRules((prev) => [
             ...prev,
@@ -71,24 +72,28 @@ const RozoneLayer = () => {
               value: { mode: "1", decs: "" }
             }
           ])
-          setCurrentRuleIndex(rules.length)
+          setCurrentRuleId(currentId.current)
         }}
-        onDelete={(index) => {
-          setRules((prev) => prev.filter((_, i) => i !== index))
-          setCurrentRuleIndex((prev) =>
-            prev === index ? 0 : prev > index ? prev - 1 : prev
-          )
+        onDelete={(id) => {
+          setRules((prev) => prev.filter((item) => item.id !== id))
+          setCurrentRuleId((prev) => {
+            const prevIndex = rules.findIndex((item) => item.id === prev)
+            const currentIndex = rules.findIndex((item) => item.id === id)
+            return prevIndex === currentIndex
+              ? 0
+              : prevIndex > currentIndex
+                ? prevIndex - 1
+                : prevIndex
+          })
         }}
       />
       <Split type="vertical" />
       <Content
-        data={rules[currentRuleIndex]}
+        data={rules.find((item) => item.id === currentRuleId)}
         onEdit={(rule) => {
-          setRules((prev) => {
-            const newRules = [...prev]
-            newRules[currentRuleIndex] = rule
-            return newRules
-          })
+          setRules((prev) =>
+            prev.map((item) => (item.id === currentRuleId ? rule : item))
+          )
         }}
       />
     </div>
