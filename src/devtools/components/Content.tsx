@@ -1,4 +1,5 @@
 import debounce from "lodash/debounce"
+import { Ban } from "lucide-react"
 import {
   Fragment,
   useCallback,
@@ -10,7 +11,6 @@ import {
 
 import type { Rule } from "~devtools/panels"
 
-import Split from "./Split"
 import { Input } from "../../components/ui/input"
 import {
   Select,
@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "../../components/ui/select"
+import Split from "./Split"
 
 interface ContentProps {
   data?: Rule
@@ -133,6 +134,21 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
               />
             </Fragment>
           ) : null}
+        </div>
+        <div className="mt-4">
+          <div className="inline-flex items-center text-[14px] cursor-pointer">
+            <Ban size={16} className="mr-1 rotate-180" /> 清空
+          </div>
+          <div className="mt-1 flex flex-col gap-y-1">
+            {data?.records?.map((record, index) => (
+              <div
+                key={index}
+                className="rounded border border-solid border-border p-1">
+                <div>{record.url}</div>
+                <div className="text-muted-foreground">{record.response}</div>
+              </div>
+            )) || <div className="text-muted-foreground">暂无拦截记录</div>}
+          </div>
         </div>
       </div>
     </div>

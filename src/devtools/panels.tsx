@@ -6,10 +6,12 @@ import { getCache, sendMessageToContent, setCache } from "~utils"
 import Content from "./components/Content"
 import Sider from "./components/Sider"
 import Split from "./components/Split"
+import type { XHRMessageData } from "~contents/xhr"
 
 export interface Rule {
   label: string
   value: { mode: "1" | "2"; decs: string }
+  records?: XHRMessageData[]
 }
 
 const RozoneLayer = () => {
