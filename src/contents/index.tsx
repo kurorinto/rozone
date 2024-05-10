@@ -97,19 +97,19 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
       <Toaster
         closeButton
         richColors
+        toastOptions={{
+          className: "items-start leading-[20px]",
+          classNames: {
+            icon: 'mt-[3px]',
+            title: 'leading-[22px] text-[16px]',
+            description: 'leading-[20px] max-h-[150px] overflow-y-auto'
+          }
+        }}
         visibleToasts={Infinity}
         position="top-right"
         duration={Infinity}
         expand
       />
-      {/* <Button
-        onClick={() => {
-          toast.error("Event has been created", {
-            description: "Sunday, December 03, 2023 at 9:00 AM"
-          })
-        }}>
-        click
-      </Button> */}
     </Fragment>
   )
 }
