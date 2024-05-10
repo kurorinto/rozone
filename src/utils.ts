@@ -32,7 +32,7 @@ export const getCurrentTabId = async (): Promise<chrome.tabs.Tab | undefined> =>
   })
 }
 
-export const sendMessageToContent = async (data: Rule[]) => {
+export const sendMessageToContent = async <T>(data: T) => {
   const currentTab = await getCurrentTabId()
   if (currentTab) {
     chrome.tabs.sendMessage(currentTab.id, JSON.stringify(data))

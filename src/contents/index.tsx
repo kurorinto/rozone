@@ -6,10 +6,9 @@ import { toast, Toaster } from "sonner"
 import { getCache } from "src/utils"
 
 import { Button } from "~components/ui/button"
-import { EXTENSION_ID } from "~constants"
+import { DEV_EXTENSION_ID, EXTENSION_ID } from "~constants"
 import type { Rule } from "~devtools/panels"
-
-type MessageHandler = Parameters<typeof chrome.runtime.onMessage.addListener>[0]
+import type { XHRMessageData } from "./xhr"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -25,30 +24,15 @@ export const config: PlasmoCSConfig = {
 }
 
 const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
-  // 初始化
-  const init = async () => {
-    const cacheData = await getCache()
-  }
-
-  const messageHandler = useCallback<MessageHandler>((messageJSON, sender) => {
-    if (sender.id === EXTENSION_ID) {
-      const data: Rule[] = JSON.parse(messageJSON)
-    }
+  const messageHandler = useCallback((e: MessageEvent<XHRMessageData>) => {
+    const messageData = e.data
+    
   }, [])
 
   useEffect(() => {
-    init()
-
-    const head = document.querySelector("head")
-    const style = document.createElement("style")
-    style.id = "rozone"
-    style.textContent = cssText
-    head.appendChild(style)
-
-    chrome.runtime.onMessage.addListener(messageHandler)
-
+    window.addEventListener('message', messageHandler)
     return () => {
-      chrome.runtime.onMessage.removeListener(messageHandler)
+      window.removeEventListener('message', messageHandler)
     }
   }, [])
 
@@ -62,14 +46,14 @@ const Contents: FC<PlasmoCSUIProps> = ({ anchor }) => {
         duration={Infinity}
         expand
       />
-      <Button
+      {/* <Button
         onClick={() => {
           toast.error("Event has been created", {
             description: "Sunday, December 03, 2023 at 9:00 AM"
           })
         }}>
         click
-      </Button>
+      </Button> */}
     </Fragment>
   )
 }
