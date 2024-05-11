@@ -10,6 +10,7 @@ export interface XHRMessageData {
   requestBody: string
   xRequestId: string
   response: string
+  timestamp: string
 }
 
 function isAbsoluteUrl(url) {
@@ -52,7 +53,7 @@ window.addEventListener("load", () => {
               const arr = this.responseText;
               const headers = convertHeadersToObject(this.getAllResponseHeaders());
               // 发送给content-ui
-              window.postMessage({ url: this._url, requestBody: postData, xRequestId: headers['x-request-id'], response: arr }, '*');
+              window.postMessage({ url: this._url, requestBody: postData, xRequestId: headers['x-request-id'], response: arr, timestamp: Date.now() }, '*');
             } catch (err) {
               console.log(err);
               console.log("Error in responseType try catch");

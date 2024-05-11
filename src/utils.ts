@@ -49,4 +49,4 @@ export const sendMessageToContent = async (data: RozoneStorage) => {
 
 export const isEmpty = (obj: Object) => !Object.keys(obj).length
 
-export const isSelfExtension = (sender: chrome.runtime.MessageSender) => sender.id === (process.env.NODE_ENV === "development" ? DEV_EXTENSION_ID : EXTENSION_ID)
+export const isSelfExtension = (sender: chrome.runtime.MessageSender) => sender.id === chrome.runtime.id

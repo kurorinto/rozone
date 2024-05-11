@@ -56,7 +56,6 @@ const RozoneLayer = () => {
   useEffect(() => {
     sendMessageToContent({ rules })
     setCache({ rules, currentId: currentId.current })
-    console.log(rules, currentId.current)
   }, [rules])
 
   useEffect(() => {

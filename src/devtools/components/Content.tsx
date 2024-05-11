@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import debounce from "lodash/debounce"
 import { Ban } from "lucide-react"
 import {
@@ -152,6 +153,10 @@ const Content: FC<ContentProps> = ({ data, onEdit, onClearRecords }) => {
                     key={index}
                     className="rounded border border-solid border-border p-1 break-all">
                     <div>{record.url}</div>
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">Date:</span>{" "}
+                      {dayjs(record.timestamp).format("YYYY.MM.DD HH:mm:ss")}
+                    </div>
                     <div className="text-muted-foreground">
                       <span className="font-medium">XRequestId:</span>{" "}
                       {record.xRequestId}
