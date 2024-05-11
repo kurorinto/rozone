@@ -25,6 +25,7 @@ import Split from "./Split"
 interface ContentProps {
   data?: Rule
   onEdit?: (rule: Rule) => void
+  onClearRecords?: (id: number) => void
 }
 
 const selectItems = [
@@ -38,7 +39,7 @@ const selectItems = [
   }
 ]
 
-const Content: FC<ContentProps> = ({ data, onEdit }) => {
+const Content: FC<ContentProps> = ({ data, onEdit, onClearRecords }) => {
   const [editing, setEditing] = useState(false)
   const [ruleLabel, setRuleLabel] = useState(data?.label)
   const [ruleDesc, setRuleDesc] = useState(data?.value.decs || "")
@@ -63,9 +64,9 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
   }, [data?.value.decs])
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col h-full">
       <div
-        className="h-10 px-4 flex items-center line-clamp-1 text-[14px] font-medium justify-between"
+        className="h-10 flex-shrink-0 flex-grow-0 px-4 flex items-center line-clamp-1 text-[14px] font-medium justify-between"
         onDoubleClick={() => data?.label && setEditing(true)}>
         {editing ? (
           <Input
@@ -103,8 +104,8 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
         )}
       </div>
       <Split />
-      <div className="flex-1 p-2">
-        <div className="flex items-center gap-x-2">
+      <div className="flex-1 py-2 h-[calc(100%-2.5rem-1px)]">
+        <div className="flex px-2 items-center gap-x-2 h-[36px]">
           {data ? (
             <Fragment>
               <Select
@@ -135,27 +136,38 @@ const Content: FC<ContentProps> = ({ data, onEdit }) => {
             </Fragment>
           ) : null}
         </div>
-        <div className="mt-4">
-          {data ? (
-            <Fragment>
-              <div className="inline-flex items-center text-[14px] cursor-pointer">
+        {data ? (
+          <Fragment>
+            <div className="h-[20px] leading-[20px] flex items-center px-2 mt-4">
+              <div
+                className="inline-flex h-full items-center text-[14px] cursor-pointer"
+                onClick={() => onClearRecords?.(data.id)}>
                 <Ban size={16} className="mr-1 rotate-180" /> 清空
               </div>
-              <div className="mt-1 flex flex-col gap-y-1">
-                {data?.records?.map((record, index) => (
-                  <div
-                    key={index}
-                    className="rounded border border-solid border-border p-1">
-                    <div>{record.url}</div>
-                    <div className="text-muted-foreground">
-                      {record.response}
-                    </div>
+            </div>
+            <div className="mt-1 flex flex-col gap-y-1 px-2 h-[calc(100%-36px-20px-1rem)] overflow-y-auto">
+              {data?.records?.map((record, index) => (
+                <div
+                  key={index}
+                  className="rounded border border-solid border-border p-1 break-all">
+                  <div>{record.url}</div>
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">XRequestId:</span>{" "}
+                    {record.xRequestId}
                   </div>
-                )) || <div className="text-muted-foreground">暂无拦截记录</div>}
-              </div>
-            </Fragment>
-          ) : null}
-        </div>
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">RequestBody:</span>{" "}
+                    {record.requestBody}
+                  </div>
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">ResponseBody:</span>{" "}
+                    {record.response}
+                  </div>
+                </div>
+              )) || <div className="text-muted-foreground">暂无拦截记录</div>}
+            </div>
+          </Fragment>
+        ) : null}
       </div>
     </div>
   )

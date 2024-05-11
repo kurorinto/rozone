@@ -34,36 +34,34 @@ const Contents: FC<PlasmoCSUIProps> = () => {
 
   const windowMessageHandler = useCallback(
     (e: MessageEvent<XHRMessageData>) => {
-      const messageData = e.data
+      const xhrInfo = e.data
       // 拦截规则匹配
-      const isMatched = rules.some(
+      const rule = rules.find(
         ({ value }) =>
           value.decs &&
           (value.mode === "1"
-            ? messageData.url.includes(value.decs)
+            ? xhrInfo.url.includes(value.decs)
             : value.mode === "2"
-              ? new RegExp(value.decs).test(messageData.url)
+              ? new RegExp(value.decs).test(xhrInfo.url)
               : false)
       )
-      if (isMatched) {
-        const responseData = JSON.parse(messageData.response) as Object
+      if (rule) {
+        const responseData = JSON.parse(xhrInfo.response) as Object
         // 先写死我们自己的接口
         if (responseData.hasOwnProperty("success")) {
           if (!responseData["success" as keyof typeof responseData]) {
             // 拦截 失败的请求 toast提示
-            toast.error(messageData.url, {
+            toast.error(xhrInfo.url, {
               description: `
                 <span class="font-medium">XRequestID:</span>
-                <span>${messageData.xRequestId}</span><br />
+                <span>${xhrInfo.xRequestId}</span><br />
                 <span class="font-medium">RequestBody:</span>
-                <span>${messageData.requestBody}</span><br />
+                <span>${xhrInfo.requestBody}</span><br />
                 <span class="font-medium">ResponseBody:</span>
-                <span>${messageData.response}</span>`
+                <span>${xhrInfo.response}</span>`
             })
             // 发消息给 devtools 页面
-            console.log(chrome.runtime)
-            console.log(chrome.tabs)
-            chrome.runtime.sendMessage("bingo!")
+            chrome.runtime.sendMessage(JSON.stringify({ rule, xhrInfo }))
           }
         }
       }

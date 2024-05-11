@@ -36,9 +36,20 @@ const RozoneLayer = () => {
 
   const runtimeMessageHandler: MessageHandler = (messageJSON, sender) => {
     if (isSelfExtension(sender)) {
-      // todo
-      const data = JSON.parse(messageJSON)
-      setRules(data.rules)
+      const data = JSON.parse(messageJSON) as {
+        rule: Rule
+        xhrInfo: XHRMessageData
+      }
+      setRules((prev) =>
+        prev.map((item) => {
+          if (item.id === data.rule.id) {
+            item.records?.length
+              ? item.records.push(data.xhrInfo)
+              : (item.records = [data.xhrInfo])
+          }
+          return item
+        })
+      )
     }
   }
 
@@ -93,6 +104,16 @@ const RozoneLayer = () => {
         onEdit={(rule) => {
           setRules((prev) =>
             prev.map((item) => (item.id === currentRuleId ? rule : item))
+          )
+        }}
+        onClearRecords={(id) => {
+          setRules((prev) =>
+            prev.map((item) => {
+              if (item.id === id) {
+                item.records = []
+              }
+              return item
+            })
           )
         }}
       />

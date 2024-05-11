@@ -6,7 +6,7 @@ interface SplitProps {
  
 const Split: FC<SplitProps> = ({ type = 'horizontal' }) => {
   return (
-    <div className={`${type === 'horizontal' ? 'w-full h-[1px]' : 'w-[1px] h-full'} bg-border`}></div>
+    <div className={`${type === 'horizontal' ? 'w-full h-[1px]' : 'w-[1px] h-full'} bg-border flex-shrink-0 flex-grow-0`}></div>
   );
 }
  
