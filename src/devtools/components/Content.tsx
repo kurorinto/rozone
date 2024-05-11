@@ -146,25 +146,29 @@ const Content: FC<ContentProps> = ({ data, onEdit, onClearRecords }) => {
               </div>
             </div>
             <div className="mt-1 flex flex-col gap-y-1 px-2 h-[calc(100%-36px-20px-1rem)] overflow-y-auto">
-              {data?.records?.map((record, index) => (
-                <div
-                  key={index}
-                  className="rounded border border-solid border-border p-1 break-all">
-                  <div>{record.url}</div>
-                  <div className="text-muted-foreground">
-                    <span className="font-medium">XRequestId:</span>{" "}
-                    {record.xRequestId}
+              {data?.records?.length ? (
+                data.records.map((record, index) => (
+                  <div
+                    key={index}
+                    className="rounded border border-solid border-border p-1 break-all">
+                    <div>{record.url}</div>
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">XRequestId:</span>{" "}
+                      {record.xRequestId}
+                    </div>
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">RequestBody:</span>{" "}
+                      {record.requestBody}
+                    </div>
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">ResponseBody:</span>{" "}
+                      {record.response}
+                    </div>
                   </div>
-                  <div className="text-muted-foreground">
-                    <span className="font-medium">RequestBody:</span>{" "}
-                    {record.requestBody}
-                  </div>
-                  <div className="text-muted-foreground">
-                    <span className="font-medium">ResponseBody:</span>{" "}
-                    {record.response}
-                  </div>
-                </div>
-              )) || <div className="text-muted-foreground">暂无拦截记录</div>}
+                ))
+              ) : (
+                <div className="text-muted-foreground">暂无拦截记录</div>
+              )}
             </div>
           </Fragment>
         ) : null}
