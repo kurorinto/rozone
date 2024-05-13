@@ -13,8 +13,8 @@ export interface XHRMessageData {
   timestamp: string
 }
 
-function isAbsoluteUrl(url) {
-  return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//");
+function absolutelyUrl(url) {
+  return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//") ? url : location.origin + url;
 }
 
 function convertHeadersToObject(headersString) {
@@ -40,7 +40,7 @@ window.addEventListener("load", () => {
     // 对open进行patch 获取url和method
     XHR.open = function (method, url) {
       this._method = method;
-      this._url = isAbsoluteUrl(url) ? url : location.origin + url;
+      this._url = absolutelyUrl(url);
       return open.apply(this, arguments);
     };
     // 同send进行patch 获取responseData.
